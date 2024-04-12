@@ -25,6 +25,11 @@ jobs:
       id: latest-tag
       run: echo "tag=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_OUTPUT
 
+    - name: Get short SHA for beta
+      if: steps.increment_version.outputs.beta == 'true'
+      id: slug
+      run: echo "sha7=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
+
     - name: Increment version
       id: increment_version
       run: |
@@ -32,6 +37,7 @@ jobs:
         major=$(echo $latest_tag | cut -d. -f1 | sed 's/v//')
         minor=$(echo $latest_tag | cut -d. -f2)
         patch=$(echo $latest_tag | cut -d. -f3)
+        beta_tag=""
 
         if [[ "${{ steps.latest_commit.outputs.message }}" == *"[MAJOR]"* ]]; then
           major=$((major + 1))
@@ -47,10 +53,11 @@ jobs:
           beta=false
         else
           beta=true
+          beta_tag="-${{ steps.slug.outputs.sha7 }}"
         fi
 
         new_tag="v$major.$minor.$patch"
-        ghcr_tag="$major.$minor.$patch"
+        ghcr_tag="$major.$minor.$patch$beta_tag"
 
         echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
         echo "ghcr_tag=$ghcr_tag" >> $GITHUB_OUTPUT
@@ -80,12 +87,7 @@ jobs:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Get short SHA for beta
-      if: steps.increment_version.outputs.beta == 'true'
-      id: slug
-      run: echo "sha7=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
-      
+    
     - name: Build and push
       if: steps.increment_version.outputs.beta == 'false'
       uses: docker/build-push-action@v5.1.0
@@ -105,6 +107,7 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: |
+          ghcr.io/rargames/4gaboards:beta-latest
           ghcr.io/rargames/4gaboards:beta-${{ steps.increment_version.outputs.ghcr_tag }}-${{ steps.slug.outputs.sha7 }}
 
     - name: push
