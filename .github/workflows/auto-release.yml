@@ -93,8 +93,8 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: |
-          ghcr.io/rargames/4gaboards:latest
-          ghcr.io/rargames/4gaboards:${{ steps.increment_version.outputs.ghcr_tag }}
+          ghcr.io/rargames/testActions2:latest
+          ghcr.io/rargames/testActions2:${{ steps.increment_version.outputs.ghcr_tag }}
     
     - name: Build and push beta
       if: steps.increment_version.outputs.beta == 'true'
@@ -104,8 +104,8 @@ jobs:
         platforms: linux/amd64,linux/arm64
         push: true
         tags: |
-          ghcr.io/rargames/4gaboards:beta-latest
-          ghcr.io/rargames/4gaboards:beta-${{ steps.increment_version.outputs.ghcr_tag }}-${{ steps.slug.outputs.sha7 }}
+          ghcr.io/rargames/testActions2:beta-latest
+          ghcr.io/rargames/testActions2:beta-${{ steps.increment_version.outputs.ghcr_tag }}-${{ steps.slug.outputs.sha7 }}
 
     - name: push
       if: steps.increment_version.outputs.beta == 'false'
@@ -141,6 +141,6 @@ jobs:
           Changes since last release:
           ${{ steps.changelog.outputs.changelog }}
 
-          Install this release using: `docker pull ghcr.io/rargames/4gaboards:${{ steps.increment_version.outputs.ghcr_tag }}`
+          Install this release using: `docker pull ghcr.io/rargames/testActions2:${{ steps.increment_version.outputs.ghcr_tag }}`
         draft: false
         prerelease: false
