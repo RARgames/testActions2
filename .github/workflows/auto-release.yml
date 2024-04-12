@@ -26,7 +26,6 @@ jobs:
       run: echo "tag=$(git describe --tags `git rev-list --tags --max-count=1`)" >> $GITHUB_OUTPUT
 
     - name: Get short SHA for beta
-      if: steps.increment_version.outputs.beta == 'true'
       id: slug
       run: echo "sha7=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
 
@@ -64,15 +63,12 @@ jobs:
         echo "beta=$beta" >> $GITHUB_OUTPUT
 
     - name: Update package.json version
-      if: steps.increment_version.outputs.beta == 'false'
       run: jq '.version = "'${{ steps.increment_version.outputs.ghcr_tag }}'"' package.json > temp.json && mv temp.json package.json
 
     - name: Update package-lock.json version
-      if: steps.increment_version.outputs.beta == 'false'
       run: jq '.version = "'${{ steps.increment_version.outputs.ghcr_tag }}'" | .packages[""].version = "'${{ steps.increment_version.outputs.ghcr_tag }}'"' package-lock.json > temp.json && mv temp.json package-lock.json
 
     - name: Update .env version
-      if: steps.increment_version.outputs.beta == 'false'
       run: grep -v '^REACT_APP_VERSION=' client/.env > temp.txt && echo 'REACT_APP_VERSION=${{ steps.increment_version.outputs.ghcr_tag }}' >> temp.txt && mv temp.txt client/.env
 
     - name: Set up QEMU
