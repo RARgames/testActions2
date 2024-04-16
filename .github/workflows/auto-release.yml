@@ -95,6 +95,7 @@ jobs:
         tags: |
           ghcr.io/rargames/testactions2:latest
           ghcr.io/rargames/testactions2:${{ steps.increment_version.outputs.ghcr_tag }}
+        labels: "version: ${{ steps.increment_version.outputs.ghcr_tag }}"
     
     - name: Build and push beta
       if: steps.increment_version.outputs.beta == 'true'
@@ -106,6 +107,7 @@ jobs:
         tags: |
           ghcr.io/rargames/testactions2:beta-latest
           ghcr.io/rargames/testactions2:beta-${{ steps.increment_version.outputs.ghcr_tag }}-${{ steps.slug.outputs.sha7 }}
+        labels: "version: ${{ steps.increment_version.outputs.ghcr_tag }}"
 
     - name: push
       if: steps.increment_version.outputs.beta == 'false'
@@ -115,9 +117,6 @@ jobs:
         git config --local user.name "GitHub Action"
         git commit -m "Release ${{ steps.increment_version.outputs.ghcr_tag }}"
         git push
-
-    - name: Add version label to Docker image
-      run: docker manifest annotate ghcr.io/rargames/testactions2:beta-latest "version=${{ steps.increment_version.outputs.ghcr_tag }}"
 
     - name: push-tag
       if: steps.increment_version.outputs.beta == 'false'
