@@ -117,7 +117,7 @@ jobs:
         git push
 
     - name: Add version label to Docker image
-      run: docker image label add ghcr.io/rargames/testactions2:latest "version=${{ steps.increment_version.outputs.ghcr_tag }}"
+      run: docker manifest annotate ghcr.io/rargames/testactions2:latest "version=${{ steps.increment_version.outputs.ghcr_tag }}"
 
     - name: push-tag
       if: steps.increment_version.outputs.beta == 'false'
