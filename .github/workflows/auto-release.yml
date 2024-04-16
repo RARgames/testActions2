@@ -95,7 +95,7 @@ jobs:
         tags: |
           ghcr.io/rargames/testactions2:latest
           ghcr.io/rargames/testactions2:${{ steps.increment_version.outputs.ghcr_tag }}
-        labels: "version: ${{ steps.increment_version.outputs.ghcr_tag }}"
+        labels: version: ${{ steps.increment_version.outputs.ghcr_tag }}
     
     - name: Build and push beta
       if: steps.increment_version.outputs.beta == 'true'
@@ -107,7 +107,7 @@ jobs:
         tags: |
           ghcr.io/rargames/testactions2:beta-latest
           ghcr.io/rargames/testactions2:beta-${{ steps.increment_version.outputs.ghcr_tag }}-${{ steps.slug.outputs.sha7 }}
-        labels: "version: ${{ steps.increment_version.outputs.ghcr_tag }}"
+        labels: version: ${{ steps.increment_version.outputs.ghcr_tag }}
 
     - name: push
       if: steps.increment_version.outputs.beta == 'false'
