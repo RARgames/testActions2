@@ -133,11 +133,12 @@ jobs:
     
     - name: Generate Changelog
       id: changelog2
-      uses: jaywcjlove/changelog-generator@main
+      uses: jaywcjlove/changelog-generator@v2.1.0
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         filter-author: (RARgames|dependabot\[bot\]|Renovate Bot)
         filter: '[PATCH]'
+        order: 'desc'
 
     - name: release
       if: steps.increment_version.outputs.beta == 'false'
