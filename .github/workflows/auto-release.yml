@@ -129,9 +129,8 @@ jobs:
       uses: requarks/changelog-action@v1.10.2
       with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "${{ steps.latest-tag.outputs.tag }}."
+          tag: ${{ github.ref_name }
             
-
     - name: release
       if: steps.increment_version.outputs.beta == 'false'
       id: create_release
