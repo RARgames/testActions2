@@ -129,7 +129,7 @@ jobs:
       uses: requarks/changelog-action@v1.10.2
       with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          # tag: ${{ steps.latest-tag.outputs.tag }}
+          fromTag: ${{ steps.latest-tag.outputs.tag }}
             
 
     - name: release
