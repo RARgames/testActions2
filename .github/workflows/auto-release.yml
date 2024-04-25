@@ -33,6 +33,7 @@ jobs:
       id: increment_version
       run: |
         latest_tag=${{ steps.latest-tag.outputs.tag }}
+        echo $latest_tag
         major=$(echo $latest_tag | cut -d. -f1 | sed 's/v//')
         minor=$(echo $latest_tag | cut -d. -f2)
         patch=$(echo $latest_tag | cut -d. -f3)
