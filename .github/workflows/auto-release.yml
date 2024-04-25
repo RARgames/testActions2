@@ -138,7 +138,6 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         filter-author: (RARgames|dependabot\[bot\]|Renovate Bot)
         filter: '[PATCH]'
-        order: 'desc'
 
     - name: release
       if: steps.increment_version.outputs.beta == 'false'
