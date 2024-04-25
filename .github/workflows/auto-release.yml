@@ -33,7 +33,6 @@ jobs:
       id: increment_version
       run: |
         latest_tag=${{ steps.latest-tag.outputs.tag }}
-        echo $latest_tag
         major=$(echo $latest_tag | cut -d. -f1 | sed 's/v//')
         minor=$(echo $latest_tag | cut -d. -f2)
         patch=$(echo $latest_tag | cut -d. -f3)
@@ -130,7 +129,7 @@ jobs:
       uses: requarks/changelog-action@v1.10.2
       with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.latest-tag.outputs.tag }}
+          tag: "${{ steps.latest-tag.outputs.tag }}."
             
 
     - name: release
