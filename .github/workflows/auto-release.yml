@@ -134,13 +134,10 @@ jobs:
     - name: Generate Changelog
       id: changelog2
       uses: jaywcjlove/changelog-generator@main
-    
-    - name: Get commits since last release
-      id: changelog
-      run: |
-        COMMITS=$(git log --pretty=format:"- [%s](https://github.com/${{ github.repository }}/commit/%h)" $(git describe --tags --abbrev=0)..HEAD)
-        echo "changelog=$COMMITS" >> $GITHUB_OUTPUT
-            
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        filter-author: (RARgames|dependabot\[bot\]|Renovate Bot)
+
     - name: release
       if: steps.increment_version.outputs.beta == 'false'
       id: create_release
