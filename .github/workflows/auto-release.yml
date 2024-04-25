@@ -131,34 +131,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
           commitMode: true
-          configurationJson: |
-            {
-              "template": "#{{CHANGELOG}}",
-              "categories": [
-                {
-                    "title": "## Feature",
-                    "labels": ["feat", "feature"]
-                },
-                {
-                    "title": "## Fix",
-                    "labels": ["fix", "bug"]
-                },
-                {
-                    "title": "## Other",
-                    "labels": []
-                }
-              ],
-              "label_extractor": [
-                {
-                  "pattern": "^(build|ci|chore|doc|docs|wiki|remove|deprecate|security|dependency|package|feat|feature|fix|bug|perf|optimize|refactor|revert|style|test):(.*)",
-                  "target": "$1"
-                },
-                {
-                  "pattern":         "^(build|ci|chore|doc|docs|wiki|remove|deprecate|security|dependency|package|feat|feature|fix|bug|perf|optimize|refactor|revert|style|test){1}(\\([\\w\\-\\.]+\\))?(!)?:(.*)",
-                  "target": "$1"
-                }
-                ],
-            }
+          config: |
+            sections:
+              - title: 'Feature 🚀'
+                labels: ['enhancement', 'feat']
+              - title: 'Bugfix 🐞'
+                labels: ['bug']
 
     - name: release
       if: steps.increment_version.outputs.beta == 'false'
