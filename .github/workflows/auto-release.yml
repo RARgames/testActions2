@@ -123,13 +123,38 @@ jobs:
       run: |
         git tag ${{ steps.increment_version.outputs.new_tag }}
         git push --tags
-        
+    
     - name: Changelog
-      if: steps.increment_version.outputs.beta == 'false'
-      uses: Bullrich/generate-release-changelog@2.0.2
       id: changelog
+      uses: mikepenz/release-changelog-builder-action@4
       env:
-        REPO: ${{ github.repository }} 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+          commitMode: true
+          configurationJson: |
+            {
+              "template": "#{{CHANGELOG}}",
+              "categories": [
+                {
+                    "title": "## Feature",
+                    "labels": ["feat", "feature"]
+                },
+                {
+                    "title": "## Fix",
+                    "labels": ["fix", "bug"]
+                },
+                {
+                    "title": "## Other",
+                    "labels": []
+                }
+              ],
+              "label_extractor": [
+                {
+                  "pattern": "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\\([\\w\\-\\.]+\\))?(!)?: ([\\w ])+([\\s\\S]*)",
+                  "target": "$1"
+                }
+              ],
+            }
 
     - name: release
       if: steps.increment_version.outputs.beta == 'false'
@@ -141,7 +166,7 @@ jobs:
         name: "4ga Boards ${{ steps.increment_version.outputs.ghcr_tag }}"
         body: |
           Changes since last release:
-          ${{ steps.Changelog.outputs.changelog }}
+          ${{steps.changelog.outputs.changelog}}
 
           Install this release using: `docker pull ghcr.io/rargames/testactions2:${{ steps.increment_version.outputs.ghcr_tag }}`
         draft: false
