@@ -130,7 +130,11 @@ jobs:
       # with:
         # github-token: ${{ secrets.GITHUB_TOKEN }}
         # output-file: "false"
-        
+    
+    - name: Generate Changelog
+      id: changelog2
+      uses: jaywcjlove/changelog-generator@main
+    
     - name: Get commits since last release
       id: changelog
       run: |
@@ -147,7 +151,8 @@ jobs:
         name: "4ga Boards ${{ steps.increment_version.outputs.ghcr_tag }}"
         body: |
           Changes since last release:
-          ${{ steps.changelog.outputs.hangelog }}
+          ${{ steps.changelog.outputs.changelog }}
+          ${{ steps.changelog2.outputs.changelog }}
 
           Install this release using: `docker pull ghcr.io/rargames/testactions2:${{ steps.increment_version.outputs.ghcr_tag }}`
         draft: false
