@@ -124,12 +124,18 @@ jobs:
         git tag ${{ steps.increment_version.outputs.new_tag }}
         git push --tags
     
-    - name: Conventional Changelog Action
+    # - name: Conventional Changelog Action
+      # id: changelog
+      # uses: TriPSs/conventional-changelog-action@v5
+      # with:
+        # github-token: ${{ secrets.GITHUB_TOKEN }}
+        # output-file: "false"
+        
+    - name: Get commits since last release
       id: changelog
-      uses: TriPSs/conventional-changelog-action@v5
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        output-file: "false"
+      run: |
+        COMMITS=$(git log --pretty=format:"- [%s](https://github.com/${{ github.repository }}/commit/%h)" $(git describe --tags --abbrev=0)..HEAD)
+        echo "changelog=$COMMITS" >> $GITHUB_OUTPUT
             
     - name: release
       if: steps.increment_version.outputs.beta == 'false'
@@ -141,7 +147,7 @@ jobs:
         name: "4ga Boards ${{ steps.increment_version.outputs.ghcr_tag }}"
         body: |
           Changes since last release:
-          ${{ steps.changelog.outputs.clean_changelog }}
+          ${{ steps.changelog.outputs.hangelog }}
 
           Install this release using: `docker pull ghcr.io/rargames/testactions2:${{ steps.increment_version.outputs.ghcr_tag }}`
         draft: false
