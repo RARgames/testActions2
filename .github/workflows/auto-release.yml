@@ -124,12 +124,12 @@ jobs:
         git tag ${{ steps.increment_version.outputs.new_tag }}
         git push --tags
     
-    - name: Changelog from Conventional Commits
-      id: changelog
-      uses: requarks/changelog-action@v1.10.2
-      with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
+    - name: Conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5
+        with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            output-file: "false"
             
     - name: release
       if: steps.increment_version.outputs.beta == 'false'
@@ -141,7 +141,7 @@ jobs:
         name: "4ga Boards ${{ steps.increment_version.outputs.ghcr_tag }}"
         body: |
           Changes since last release:
-          ${{steps.changelog.outputs.changes}}
+          ${{ steps.changelog.outputs.clean_changelog }}
 
           Install this release using: `docker pull ghcr.io/rargames/testactions2:${{ steps.increment_version.outputs.ghcr_tag }}`
         draft: false
