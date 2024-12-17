@@ -62,6 +62,13 @@ jobs:
         echo "ghcr_tag=$ghcr_tag" >> $GITHUB_OUTPUT
         echo "beta=$beta" >> $GITHUB_OUTPUT
 
+    - name: Get total downloads
+      run: |
+        RESPONSE=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/user/packages/4gaboards/downloads")
+        echo "Total downloads: $(echo $RESPONSE)"
+    
+    
     - name: Update package.json version
       run: jq '.version = "'${{ steps.increment_version.outputs.ghcr_tag }}'"' package.json > temp.json && mv temp.json package.json
 
